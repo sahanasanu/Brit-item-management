@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h1>Login</h1>
+    <form id="login-form">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <script>
+        // Handle Login Form Submission
+        document.getElementById('login-form').onsubmit = async function(event) {
+            event.preventDefault();  // Prevent the default form submission
+
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);  // Convert form data to an object
+
+            const response = await fetch('/auth/login', {
+                method: 'POST',  // POST method
+                headers: {
+                    'Content-Type': 'application/json',  // Set the content type to JSON
+                },
+                body: JSON.stringify(data),  // Convert the object to a JSON string
+            });
+
+            if (response.ok) {
+                window.location.href = '/items/list_items';  // Redirect to the list items page after successful login
+            } else {
+                alert('Error logging in. Please check your credentials and try again.');  // Show an alert if login fails
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Summary</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        h1 {
+            color: #007bff;
+        }
+
+        .summary {
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .logout-button {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        .logout-button:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Summary</h1>
+
+    <div class="summary">
+        <h2>Total Price: $<span id="total-price">0</span></h2>
+        <button class="logout-button" id="logout-button">Logout</button>
+    </div>
+
+    <script>
+        // Fetch the total price from the backend
+        document.addEventListener('DOMContentLoaded', async function() {
+            const token = localStorage.getItem('token');  // Retrieve the stored token
+
+            const response = await fetch('/items/summary', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,  // Include the token in the Authorization header
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('total-price').textContent = data.total_price;  // Display the total price
+            } else {
+                alert('Error fetching summary. Please try again.');
+            }
+        });
+
+        // Handle Logout
+        document.getElementById('logout-button').addEventListener('click', async function() {
+            const token = localStorage.getItem('token');
+            const response = await fetch('/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (response.ok) {
+                localStorage.removeItem('token');  // Remove the token from local storage
+                window.location.href = '/auth/login';  // Redirect to the login page
+            } else {
+                alert('Error logging out. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>
