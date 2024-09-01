@@ -2,16 +2,20 @@ from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from fastapi import HTTPException, Depends, status, Request
 from fastapi.security import OAuth2PasswordBearer
-from pymongo import MongoClient
-from app.config import settings
+from dotenv import load_dotenv
+import os
 
-SECRET_KEY = settings.SECRET_KEY
+# Load environment variables from .env file
+load_dotenv()
+
+# Access environment variables
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-# MongoDB client and database setup
-client = MongoClient(settings.MONGO_URI)
-db = client[settings.DATABASE_NAME]
+# MongoDB client and database setup (reusing the db from the previous section)
+client = MongoClient(os.getenv("MONGO_URI"))
+db = client[os.getenv("DATABASE_NAME")]
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
