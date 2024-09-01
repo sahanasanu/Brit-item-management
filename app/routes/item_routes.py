@@ -36,14 +36,17 @@ def get_user_items(request: Request, current_user: int = Depends(get_current_use
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/summary")
-async def get_summary(current_user: int = Depends(get_current_user), db: Session = Depends(get_db)):
+async def get_summary(request: Request, current_user: int = Depends(get_current_user), db: Session = Depends(get_db)):
     """
     Get the summary of all items and calculate the total price.
     """
     try:
         items = get_items_for_user(current_user, db)
-        total_price = sum(float(item.price) for item in items)  # Convert Decimal to float
-        item_list = [{"name": item.name, "price": float(item.price)} for item in items]  # Convert Decimal to float
-        return JSONResponse(content={"total_price": total_price, "items": item_list})
+        total_price = sum(item.price for item in items)
+        return templates.TemplateResponse("summary.html", {
+            "request": request,
+            "total_price": total_price,
+            "items": items
+        })
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

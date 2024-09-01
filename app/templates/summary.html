@@ -21,29 +21,15 @@
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .logout-button {
-            background-color: #dc3545;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-top: 20px;
-            display: inline-block;
-        }
-
-        .logout-button:hover {
-            background-color: #c82333;
+            text-align: center;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
         }
 
         table, th, td {
@@ -63,13 +49,31 @@
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
+
+        .logout-button {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        .logout-button:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 <body>
     <h1>Summary</h1>
 
     <div class="summary">
-        <h2>Total Price: $<span id="total-price">0</span></h2>
+        <h2>Total Price: ${{ total_price }}</h2>
+
+        <!-- Table to Display Items -->
+        <h2>Your Items</h2>
         <table>
             <thead>
                 <tr>
@@ -77,41 +81,21 @@
                     <th>Price</th>
                 </tr>
             </thead>
-            <tbody id="item-list">
-                <!-- Items will be loaded here -->
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>${{ item.price }}</td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
+
+        <!-- Logout Button -->
         <button class="logout-button" id="logout-button">Logout</button>
     </div>
 
     <script>
-        // Fetch the summary data from the backend
-        document.addEventListener('DOMContentLoaded', async function() {
-            const token = localStorage.getItem('token');  // Retrieve the stored token
-
-            const response = await fetch('/items/summary', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,  // Include the token in the Authorization header
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                document.getElementById('total-price').textContent = data.total_price;  // Display the total price
-
-                const itemList = document.getElementById('item-list');
-                data.items.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `<td>${item.name}</td><td>$${item.price}</td>`;
-                    itemList.appendChild(row);
-                });
-            } else {
-                alert('Error fetching summary. Please try again.');
-            }
-        });
-
         // Handle Logout
         document.getElementById('logout-button').addEventListener('click', async function() {
             const token = localStorage.getItem('token');

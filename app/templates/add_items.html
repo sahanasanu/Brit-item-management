@@ -4,6 +4,105 @@
     <meta charset="UTF-8">
     <title>Add Items</title>
     <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #007bff;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            margin: 0 auto;
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #007bff;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            display: block;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .summary-button {
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .summary-button:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
     <h1>Add Items</h1>
@@ -54,7 +153,7 @@
                 const itemList = document.getElementById('item-list');
                 items.forEach(item => {
                     const row = document.createElement('tr');
-                    row.innerHTML = `<td>${item.name}</td><td>$${item.price}</td>`;
+                    row.innerHTML = `<td>${item.name}</td><td>$${item.price.toFixed(2)}</td>`;
                     itemList.appendChild(row);
                 });
             } else {
@@ -84,7 +183,7 @@
                 const newItem = await response.json();
                 const itemList = document.getElementById('item-list');
                 const row = document.createElement('tr');
-                row.innerHTML = `<td>${newItem.name}</td><td>$${newItem.price}</td>`;
+                row.innerHTML = `<td>${newItem.name}</td><td>$${newItem.price.toFixed(2)}</td>`;
                 itemList.appendChild(row);  // Add the new item to the table
             } else {
                 alert('Error adding item. Please try again.');
