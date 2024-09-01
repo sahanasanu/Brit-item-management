@@ -30,4 +30,4 @@ class Settings(BaseSettings):
 
 # Create an instance of the Settings class to be used throughout the application.
 settings = Settings()
-print(settings)
+

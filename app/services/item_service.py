@@ -1,9 +1,10 @@
 from pymongo.collection import Collection
 from app.schemas import ItemCreate
-from fastapi import Depends
-from app.utils.database import get_collection
 
-async def create_item(item: ItemCreate, user_id: int, collection: Collection = Depends(get_collection)) -> dict:
+async def create_item(item: ItemCreate, user_id: int, collection: Collection) -> dict:
+    """
+    Create a new item and store it in the collection.
+    """
     db_item = {
         "name": item.name,
         "price": item.price,
@@ -13,7 +14,10 @@ async def create_item(item: ItemCreate, user_id: int, collection: Collection = D
     db_item["_id"] = result.inserted_id
     return db_item
 
-async def get_items_for_user(user_id: int, collection: Collection = Depends(get_collection)) -> list:
+def get_items_for_user(user_id: int, collection: Collection) -> list:
+    """
+    Retrieve all items for the specified user.
+    """
     items_cursor = collection.find({"owner_id": user_id})
-    items = await items_cursor.to_list(length=100)  # Adjust length as needed
+    items = list(items_cursor)  # Convert cursor to list synchronously
     return items

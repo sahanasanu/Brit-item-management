@@ -11,6 +11,7 @@ router = APIRouter()
 # Initialize the templates object
 templates = Jinja2Templates(directory="app/templates")
 
+
 @router.get("/create_account")
 async def show_create_account_page(request: Request):
     """
@@ -18,20 +19,24 @@ async def show_create_account_page(request: Request):
     """
     return templates.TemplateResponse("create_account.html", {"request": request})
 
+
 @router.post("/create_new_account", response_model=UserResponse)
 async def create_new_account(user_data: UserCreate, db=Depends(get_db)):
     """
     Create a new user account using JSON input.
     """
-    existing_user = await authenticate_user(user_data.username, user_data.password, db)
+    users_collection = db["users"]  # Access the 'users' collection
+
+    existing_user = await authenticate_user(user_data.username, user_data.password, users_collection)
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already taken")
 
     try:
         # If user does not exist, create a new user
-        return await create_user(user_data, collection)
+        return await create_user(user_data, users_collection)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error: {e}")
+
 
 @router.get("/login")
 async def show_login_page(request: Request):
@@ -40,15 +45,19 @@ async def show_login_page(request: Request):
     """
     return templates.TemplateResponse("login.html", {"request": request})
 
+
 @router.post("/login")
-async def login(user_data: UserLogin, response: Response, collection=Depends(get_collection)):
-    user = await authenticate_user(user_data.username, user_data.password, collection)
+async def login(user_data: UserLogin, response: Response, db=Depends(get_db)):
+    users_collection = db["users"]  # Access the 'users' collection
+
+    user = await authenticate_user(user_data.username, user_data.password, users_collection)
     if not user:
         raise HTTPException(status_code=400, detail="Invalid credentials")
 
     access_token = create_access_token(user["_id"])
     response.set_cookie(key="token", value=access_token, httponly=True)  # Set the token as an HTTP-only cookie
     return {"message": "Login successful"}
+
 
 @router.post("/logout")
 async def logout(response: Response):
