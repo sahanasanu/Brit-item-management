@@ -71,7 +71,7 @@
 
             const token = localStorage.getItem('token');  // Retrieve the stored token
 
-            const response = await fetch('/items/add_items', {  // Use the /items/add_items endpoint
+            const response = await fetch('/items/add_items', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,  // Include the token in the Authorization header

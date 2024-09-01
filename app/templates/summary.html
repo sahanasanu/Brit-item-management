@@ -21,7 +21,6 @@
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
         }
 
         .logout-button {
@@ -38,6 +37,32 @@
         .logout-button:hover {
             background-color: #c82333;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 <body>
@@ -45,11 +70,22 @@
 
     <div class="summary">
         <h2>Total Price: $<span id="total-price">0</span></h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody id="item-list">
+                <!-- Items will be loaded here -->
+            </tbody>
+        </table>
         <button class="logout-button" id="logout-button">Logout</button>
     </div>
 
     <script>
-        // Fetch the total price from the backend
+        // Fetch the summary data from the backend
         document.addEventListener('DOMContentLoaded', async function() {
             const token = localStorage.getItem('token');  // Retrieve the stored token
 
@@ -64,6 +100,13 @@
             if (response.ok) {
                 const data = await response.json();
                 document.getElementById('total-price').textContent = data.total_price;  // Display the total price
+
+                const itemList = document.getElementById('item-list');
+                data.items.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${item.name}</td><td>$${item.price}</td>`;
+                    itemList.appendChild(row);
+                });
             } else {
                 alert('Error fetching summary. Please try again.');
             }

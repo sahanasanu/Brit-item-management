@@ -8,3 +8,4 @@ jose
 python-dotenv
 Jinja2
 bcrypt==4.2.0
+pydantic[email]
