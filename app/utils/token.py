@@ -5,6 +5,8 @@ from fastapi.security import OAuth2PasswordBearer
 from dotenv import load_dotenv
 import os
 
+from pymongo import MongoClient
+
 # Load environment variables from .env file
 load_dotenv()
 
