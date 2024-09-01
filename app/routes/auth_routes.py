@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends, Request, Response
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
-
 from app.schemas import UserCreate, UserResponse, UserLogin
 from app.services.auth_service import create_user, authenticate_user
 from app.utils.token import verify_token, create_access_token
