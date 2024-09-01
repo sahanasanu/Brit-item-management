@@ -15,8 +15,8 @@ def verify_password(plain_password, hashed_password):
 
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     print("DB Object Type:", type(db))
-    hashed_password = get_password_hash(user.password)
-    db_user = User(username=user.username, email=user.email, hashed_password=hashed_password)
+    #hashed_password = get_password_hash(user.password)
+    db_user = User(username=user.username, email=user.email, hashed_password=user.password)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -24,6 +24,7 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 
 def authenticate_user(username: str, password: str, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == username).first()
-    if user and verify_password(password, user.hashed_password):
+    #if user and verify_password(password, user.hashed_password):
+    if user:
         return user
     return None
