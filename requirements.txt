@@ -4,7 +4,7 @@ sqlalchemy
 psycopg2-binary
 pydantic
 passlib[bcrypt]
-jose
+python-jose == 3.3.0
 python-dotenv
 Jinja2
 bcrypt==4.2.0
