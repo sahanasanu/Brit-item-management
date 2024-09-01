@@ -1,5 +1,4 @@
 from fastapi import APIRouter, HTTPException, Depends, Request, Response
-from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 from app.schemas import UserCreate, UserResponse, UserLogin
 from app.services.auth_service import create_user, authenticate_user
@@ -13,47 +12,46 @@ router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
 @router.get("/create_account")
-def show_create_account_page(request: Request):
+async def show_create_account_page(request: Request):
     """
     Render the Create Account page.
     """
     return templates.TemplateResponse("create_account.html", {"request": request})
 
 @router.post("/create_new_account", response_model=UserResponse)
-async def create_new_account(user_data: UserCreate, db: Session = Depends(get_db)):
+async def create_new_account(user_data: UserCreate, db=Depends(get_db)):
     """
     Create a new user account using JSON input.
     """
-    # Check if the user already exists using the authenticate_user function
-    existing_user = authenticate_user(username=user_data.username, password=user_data.password,db=db)
+    existing_user = await authenticate_user(user_data.username, user_data.password, db)
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already taken")
 
     try:
         # If user does not exist, create a new user
-        return create_user(user_data,db)
+        return await create_user(user_data, collection)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error: {e}")
 
 @router.get("/login")
-def show_login_page(request: Request):
+async def show_login_page(request: Request):
     """
     Render the Login page.
     """
     return templates.TemplateResponse("login.html", {"request": request})
 
 @router.post("/login")
-def login(user_data: UserLogin, response: Response, db: Session = Depends(get_db)):
-    user = authenticate_user(user_data.username, user_data.password, db)
+async def login(user_data: UserLogin, response: Response, collection=Depends(get_collection)):
+    user = await authenticate_user(user_data.username, user_data.password, collection)
     if not user:
         raise HTTPException(status_code=400, detail="Invalid credentials")
 
-    access_token = create_access_token(user.id)
+    access_token = create_access_token(user["_id"])
     response.set_cookie(key="token", value=access_token, httponly=True)  # Set the token as an HTTP-only cookie
     return {"message": "Login successful"}
 
 @router.post("/logout")
-def logout():
+async def logout(response: Response):
     """
     Perform logout by invalidating the JWT token.
     This could involve blacklisting the token in a real-world scenario.

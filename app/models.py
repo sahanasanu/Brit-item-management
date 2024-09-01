@@ -1,24 +1,17 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DECIMAL
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
+from mongoengine import Document, StringField, FloatField, ReferenceField
 
-Base = declarative_base()
+class User(Document):
+    username = StringField(required=True, unique=True)
+    email = StringField(required=True, unique=True)
+    hashed_password = StringField(required=True)
 
-class User(Base):
-    
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
+    def __str__(self):
+        return f"User(username={self.username}, email={self.email})"
 
-    items = relationship("Item", back_populates="owner")
+class Item(Document):
+    name = StringField(required=True)
+    price = FloatField(required=True)
+    owner = ReferenceField(User, required=True)
 
-class Item(Base):
-    __tablename__ = "items"
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    price = Column(DECIMAL(10, 2))
-    owner_id = Column(Integer, ForeignKey("users.id"))
-
-    owner = relationship("User", back_populates="items")
+    def __str__(self):
+        return f"Item(name={self.name}, price={self.price}, owner={self.owner})"

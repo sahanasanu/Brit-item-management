@@ -6,14 +6,15 @@ class Settings(BaseSettings):
 
     Attributes:
     ----------
-    DATABASE_URL : str
-        The URL of the database connection.
+    MONGO_URI : str
+        The URI for connecting to the MongoDB instance.
     SECRET_KEY : str
         The secret key used for encoding and decoding JWT tokens.
     """
 
-    DATABASE_URL: str
+    MONGO_URI: str
     SECRET_KEY: str
+    DATABASE_NAME : str
 
     class Config:
         """

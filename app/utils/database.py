@@ -1,21 +1,14 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, Session
+from pymongo import MongoClient
+from pymongo.collection import Collection
+from fastapi import Depends
 from app.config import settings
 
-DATABASE_URL = settings.DATABASE_URL
+# Create a MongoDB client
+client = MongoClient(settings.MONGO_URI)
 
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# Access the specific database
+db = client[settings.DATABASE_NAME]
 
-Base = declarative_base()
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-def create_db_and_tables():
-    Base.metadata.create_all(bind=engine)
+# Function to get the collection from the database
+def get_collection() -> Collection:
+    return db[settings.COLLECTION_NAME]

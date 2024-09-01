@@ -1,13 +1,12 @@
 fastapi
 uvicorn
-sqlalchemy
-psycopg2-binary
+pymongo
+motor
 pydantic
 passlib[bcrypt]
-python-jose == 3.3.0
+python-jose==3.3.0
 python-dotenv
 Jinja2
 bcrypt==4.2.0
 pydantic[email]
 pydantic_settings
-
