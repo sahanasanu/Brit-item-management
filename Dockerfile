@@ -15,8 +15,7 @@ EXPOSE 8000
 
 # Define environment variables (add any necessary MongoDB-related variables)
 ENV NAME World
-ENV MONGO_URI=mongodb://your_mongo_host:your_mongo_port/your_database_name
-ENV SECRET_KEY=your_secret_key
+
 
 # Run the application with uvicorn
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
