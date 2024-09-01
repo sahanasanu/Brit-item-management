@@ -10,21 +10,21 @@ from fastapi.templating import Jinja2Templates
 router = APIRouter()
 
 # Initialize the templates object
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory="templates")
 
 @router.post("/add_items", response_model=ItemResponse)
-async def add_item(item: ItemCreate, current_user: str = Depends(get_current_user), db=Depends(get_db)):
+def add_item(item: ItemCreate, current_user: str = Depends(get_current_user), db=Depends(get_db)):
     """
     Add an item for the logged-in user.
     """
     collection = db["items"]  # Access the 'items' collection
     try:
-        return await create_item(item, current_user, collection)
+        return create_item(item, current_user, collection)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/list_items", response_model=List[ItemResponse])
-async def get_user_items(request: Request, current_user: str = Depends(get_current_user), db=Depends(get_db)):
+def get_user_items(request: Request, current_user: str = Depends(get_current_user), db=Depends(get_db)):
     """
     Get all items for the logged-in user and render the add_items template.
     """
@@ -36,7 +36,7 @@ async def get_user_items(request: Request, current_user: str = Depends(get_curre
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/summary")
-async def get_summary(request: Request, current_user: str = Depends(get_current_user), db=Depends(get_db)):
+def get_summary(request: Request, current_user: str = Depends(get_current_user), db=Depends(get_db)):
     """
     Get the summary of all items and calculate the total price.
     """

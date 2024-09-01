@@ -27,13 +27,13 @@ async def create_new_account(user_data: UserCreate, db=Depends(get_db)):
     """
     users_collection = db["users"]  # Access the 'users' collection
 
-    existing_user = await authenticate_user(user_data.username, user_data.password, users_collection)
+    existing_user = authenticate_user(user_data.username, user_data.password, users_collection)
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already taken")
 
     try:
         # If user does not exist, create a new user
-        return await create_user(user_data, users_collection)
+        return create_user(user_data, users_collection)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error: {e}")
 
@@ -47,20 +47,20 @@ async def show_login_page(request: Request):
 
 
 @router.post("/login")
-async def login(user_data: UserLogin, response: Response, db=Depends(get_db)):
+def login(user_data: UserLogin, response: Response, db=Depends(get_db)):
     users_collection = db["users"]  # Access the 'users' collection
 
-    user = await authenticate_user(user_data.username, user_data.password, users_collection)
+    user = authenticate_user(user_data.username, user_data.password, users_collection)
     if not user:
         raise HTTPException(status_code=400, detail="Invalid credentials")
 
-    access_token = create_access_token(user["_id"])
+    access_token = create_access_token(user["username"])
     response.set_cookie(key="token", value=access_token, httponly=True)  # Set the token as an HTTP-only cookie
     return {"message": "Login successful"}
 
 
 @router.post("/logout")
-async def logout(response: Response):
+def lgout(response: Response):
     """
     Perform logout by invalidating the JWT token.
     This could involve blacklisting the token in a real-world scenario.

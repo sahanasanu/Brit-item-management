@@ -14,10 +14,6 @@ class UserResponse(BaseModel):
     username: str
     email: EmailStr
 
-    class Config:
-        from_attributes = True
-
-
 class ItemCreate(BaseModel):
     name: str
     price: int
@@ -27,6 +23,3 @@ class ItemResponse(BaseModel):
     name: str
     owner_id: int
     price:int
-
-    class Config:
-        orm_mode = True

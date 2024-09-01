@@ -1,7 +1,7 @@
 from pymongo.collection import Collection
-from app.schemas import ItemCreate
+from app.schemas import ItemCreate, ItemResponse
 
-async def create_item(item: ItemCreate, user_id: int, collection: Collection) -> dict:
+def create_item(item: ItemCreate, user_id: str, collection: Collection) -> dict:
     """
     Create a new item and store it in the collection.
     """
@@ -10,9 +10,9 @@ async def create_item(item: ItemCreate, user_id: int, collection: Collection) ->
         "price": item.price,
         "owner_id": user_id
     }
-    result = await collection.insert_one(db_item)
-    db_item["_id"] = result.inserted_id
-    return db_item
+    result = collection.insert_one(db_item)
+    return ItemResponse(**db_item)
+
 
 def get_items_for_user(user_id: int, collection: Collection) -> list:
     """
