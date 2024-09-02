@@ -33,6 +33,6 @@ def authenticate_user(username: str, password: str, collection: Collection):
     Authenticate a user by verifying the password.
     """
     user = collection.find_one({"username": username})
-    if user and password:
+    if user and verify_password(password, user['hashed_password']):
         return user
     return None
