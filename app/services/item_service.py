@@ -2,14 +2,14 @@ from pymongo.collection import Collection
 from app.schemas import ItemCreate, ItemResponse
 
 
-def create_item(item: ItemCreate, user_id: str, collection: Collection) -> dict:
+def create_item(item: ItemCreate, user_id: str, collection: Collection):
     """
     Create a new item and store it in the collection.
     """
     db_item = {
         "name": item.name,
         "price": item.price,
-        "owner_id": user_id
+        "owner_id": str(user_id)  # Ensure owner_id is stored as a string
     }
     result = collection.insert_one(db_item)
 
@@ -24,7 +24,7 @@ def create_item(item: ItemCreate, user_id: str, collection: Collection) -> dict:
         "owner_id": db_item["owner_id"]
     }
 
-def get_items_for_user(user_id: int, collection: Collection) -> list:
+def get_items_for_user(user_id: str, collection: Collection):
     """
     Retrieve all items for the specified user.
     """

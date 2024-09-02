@@ -19,7 +19,7 @@ class ItemCreate(BaseModel):
     price: int
 
 class ItemResponse(BaseModel):
-    id: int
+    id: str  # Change this to str to match MongoDB's ObjectId
     name: str
-    owner_id: int
-    price:int
+    price: float
+    owner_id: str
