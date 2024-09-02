@@ -41,7 +41,7 @@ def verify_token(token: str):
         user_id: str = payload.get("sub")
         if user_id is None:
             raise credentials_exception
-        user = db.users.find_one({"_id": user_id})  # MongoDB query to find the user
+        user = db.users.find_one({"username": user_id})  # MongoDB query to find the user
         if user is None:
             raise credentials_exception
         return user_id
