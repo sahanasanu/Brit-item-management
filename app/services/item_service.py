@@ -29,5 +29,13 @@ def get_items_for_user(user_id: int, collection: Collection) -> list:
     Retrieve all items for the specified user.
     """
     items_cursor = collection.find({"owner_id": user_id})
-    items = list(items_cursor)  # Convert cursor to list synchronously
+    items = [
+        {
+            "id": str(item["_id"]),  # Convert ObjectId to string
+            "name": item["name"],
+            "price": item["price"],
+            "owner_id": item["owner_id"]
+        }
+        for item in items_cursor
+    ]  # Convert cursor to list synchronously and map "_id" to "id"
     return items
