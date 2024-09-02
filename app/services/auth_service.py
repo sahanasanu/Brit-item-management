@@ -23,10 +23,9 @@ def create_user(user: UserCreate, collection: Collection):
     result = collection.insert_one(db_user)
     db_user["_id"] = result.inserted_id
     return {
-        "id": db_user["_id"],
-        "name": db_user["name"],
-        "price": db_user["price"],
-        "owner_id": db_user["owner_id"]
+        "id": str(db_user["_id"]),  # Return the ID as a string
+        "username": db_user["username"],
+        "email": db_user["email"]
     }
 
 def authenticate_user(username: str, password: str, collection: Collection):

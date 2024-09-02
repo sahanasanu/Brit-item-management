@@ -10,9 +10,9 @@ class UserLogin(BaseModel):
     username: str
     password: str
 class UserResponse(BaseModel):
-    id: int
+    id: str
     username: str
-    email: EmailStr
+    email: str
 
 class ItemCreate(BaseModel):
     name: str
