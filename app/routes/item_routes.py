@@ -10,7 +10,7 @@ from fastapi.templating import Jinja2Templates
 router = APIRouter()
 
 # Initialize the templates object
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="app/templates")
 
 @router.post("/add_items", response_model=ItemResponse)
 def add_item(item: ItemCreate, current_user: str = Depends(get_current_user), db=Depends(get_db)):
