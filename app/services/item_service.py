@@ -24,7 +24,6 @@ def create_item(item: ItemCreate, user_id: str, collection: Collection) -> dict:
         "owner_id": db_item["owner_id"]
     }
 
-
 def get_items_for_user(user_id: int, collection: Collection) -> list:
     """
     Retrieve all items for the specified user.

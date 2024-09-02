@@ -19,7 +19,8 @@ def add_item(item: ItemCreate, current_user: str = Depends(get_current_user), db
     """
     collection = db["items"]  # Access the 'items' collection
     try:
-        return create_item(item, current_user, collection)
+        created_item = create_item(item, current_user, collection)
+        return created_item  # Return the created item directly
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
